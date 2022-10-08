@@ -11,12 +11,14 @@
     
     <form action="" method="POST"> {% csrf_token %}
         
-        
 
         {{formulario.as_p}}
 
         
         <button type="submit">Iniciar Sesión</button>
+
+        {{mensaje2}}
+       
         
     </form>
 

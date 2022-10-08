@@ -6,7 +6,7 @@ from .models import *
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, authenticate
 
 #Home/Inicio
@@ -33,17 +33,40 @@ def inicioSesion(request):
             if user:
 
                 login(request, user)
-                return render(request, "AppMascota/inicio.html", f"Bienvenido {user}")
+                return render(request, "AppMascota/inicio.html", {"mensaje":f"Bienvenido {user}"})
         
         else:
 
-            return render(request, "AppMascota/inicio.html", f"Los datos son incorrectos.")
+            return render(request, "AppMascota/login.html", {"mensaje2":f"Los datos son incorrectos."})
 
     else:
 
         form = AuthenticationForm()
     
     return render(request, "AppMascota/login.html", {"formulario":form})
+
+
+
+def registroUser(request):
+
+    if request.method == "POST":
+
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+
+            username = form.cleaned_data["username"]
+            form.save()
+            return render(request, "AppMascota/inicio.html", f"Usuario {username} creado con éxito")
+    
+    else: 
+        
+        form = UserCreationForm()
+
+    return render(request, "AppMascota/registro.html", {"formulario":form})
+
+
+
 
 
 #Articulos CRUD

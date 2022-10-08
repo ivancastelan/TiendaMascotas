@@ -8,6 +8,8 @@ urlpatterns = [
     path('', inicio, name="Home"),
 
     path("login", inicioSesion, name="Login"),
+    path("register", registroUser, name="Registro"),
+
 
     #CRUD Articulo
 
