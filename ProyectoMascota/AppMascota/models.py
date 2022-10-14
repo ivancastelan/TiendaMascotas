@@ -1,5 +1,7 @@
 from django.db import models
 from datetime import datetime, date
+from django.contrib.auth.models import User
+
 
 # Create your models here.
 
@@ -21,3 +23,7 @@ class Review(models.Model):
     usuario = models.CharField(max_length=30)
 
 
+class Avatar(models.Model):
+
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    imagen = models.ImageField(upload_to="avatar", null=True, blank=True)

@@ -8,6 +8,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 #Home/Inicio
 
@@ -51,21 +53,75 @@ def registroUser(request):
 
     if request.method == "POST":
 
-        form = UserCreationForm(request.POST)
+        form = RegistroUser(request.POST)
 
         if form.is_valid():
 
             username = form.cleaned_data["username"]
             form.save()
-            return render(request, "AppMascota/inicio.html", f"Usuario {username} creado con éxito")
+            
+            return render(request, "AppMascota/inicio.html", {"mensaje2": f"¡Usuario creado con éxito!"})
     
     else: 
         
-        form = UserCreationForm()
+        form = RegistroUser()
 
     return render(request, "AppMascota/registro.html", {"formulario":form})
 
 
+@login_required
+def editarUser(request):
+
+    usuario = request.user
+
+    if request.method == "POST":
+
+        form = FormularioUsuario(request.POST)
+
+        if form.is_valid():
+
+            info = form.cleaned_data
+            usuario.email = info["email"]
+            usuario.set_password(info["password1"])
+            usuario.first_name = info["nombre"]
+            usuario.last_name = info["apellido"]
+            usuario.save()
+
+            return render(request, "inicio.html")
+    
+    else:
+
+        form = FormularioUsuario(initial={
+            "email":usuario.email,
+            "nombre":usuario.first_name,
+            "apellido":usuario.last_name,
+            })
+
+    return render(request, "editarPerfil.html", {"form":form, "usuario":usuario})
+
+
+@login_required
+def avatarAgregar(request):
+
+    if request.method =="POST":
+
+        form = FormularioAvatar(request.POST, request.FILES)
+
+        if form.is_valid():
+
+            usuarioActual = User.objects.get(username=request.user)
+
+            avatar = Avatar(usuario=usuarioActual, imagen=form.cleaned_data["imagen"])
+
+            avatar.save()
+
+            return render(request, "inicio.html")
+    
+    else:
+
+        form = FormularioAvatar()
+    
+    return render(request, "agregarAvatar.html", {"formulario":form})
 
 
 
@@ -77,13 +133,13 @@ class ListaArticulo(ListView):
     template_name = "articulo_list.html"
 
 
-class DetalleArticulo(DetailView):
+class DetalleArticulo(LoginRequiredMixin, DetailView):
 
     model = Articulo
     template_name = "articulo_detail.html"
 
 
-class CrearArticulo(CreateView):
+class CrearArticulo(LoginRequiredMixin, CreateView):
 
     model = Articulo
     success_url = "/AppMascota/articulo/list/"
@@ -91,16 +147,19 @@ class CrearArticulo(CreateView):
     fields = "__all__"
     
 
-class EditarArticulo(UpdateView):
+class EditarArticulo(LoginRequiredMixin, UpdateView):
 
     model= Articulo
-    success_url = "/AppMascota/articulo/list/"
-    template_name = "articulo_detail.html"
+    success_url = "/AppMascota/articulo/list/" 
     fields = "__all__"
 
 
-class BorrarArticulo(DeleteView):
+class BorrarArticulo(LoginRequiredMixin, DeleteView):
 
     model= Articulo
     success_url = "/AppMascota/articulo/list"
     template_name = "articulo_confirm_delete.html"
+
+
+
+
