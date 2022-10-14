@@ -1,0 +1,15 @@
+{% extends 'padre.html' %}
+{% load static %}
+
+{% block feature %}
+<body>
+
+    <p>Nombre: {{articulo.nombre}}</p>
+    <p>Mascota: {{articulo.animal}}</p>
+    <p>Categoria: {{articulo.categoria}}</p>
+    <p>Precio: {{articulo.precio}}</p>
+    <p>Fecha de creación: {{articulo.fecha}}</p>
+    
+    
+</body>
+{% endblock %}
