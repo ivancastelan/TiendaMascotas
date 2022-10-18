@@ -12,6 +12,8 @@ class FormularioArticulos(forms.Form):
     categoria = forms.CharField()
     precio = forms.IntegerField()
     fecha = forms.DateField()
+    imagen = forms.ImageField()
+    
 
 
 class FormularioReview(forms.Form):

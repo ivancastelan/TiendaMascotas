@@ -15,6 +15,9 @@ class Articulo(models.Model):
     categoria = models.CharField(max_length=30)
     precio = models.IntegerField() 
     fecha = models.DateField(auto_now_add=True)
+    imagen = models.ImageField(null=True, blank=True, upload_to="images")
+    autor = models.ForeignKey(User, on_delete=models.CASCADE)
+
 
 
 class Review(models.Model):

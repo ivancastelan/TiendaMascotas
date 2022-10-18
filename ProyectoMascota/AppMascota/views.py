@@ -127,6 +127,7 @@ def avatarAgregar(request):
 
 #Articulos CRUD
 
+
 class ListaArticulo(ListView):
 
     model = Articulo
@@ -136,6 +137,7 @@ class ListaArticulo(ListView):
 class DetalleArticulo(LoginRequiredMixin, DetailView):
 
     model = Articulo
+    login_url = "login.html"
     template_name = "articulo_detail.html"
 
 
@@ -143,6 +145,7 @@ class CrearArticulo(LoginRequiredMixin, CreateView):
 
     model = Articulo
     success_url = "/AppMascota/articulo/list/"
+    login_url = "login.html"
     template_name = "articulo_form.html"
     fields = "__all__"
     
@@ -151,6 +154,7 @@ class EditarArticulo(LoginRequiredMixin, UpdateView):
 
     model= Articulo
     success_url = "/AppMascota/articulo/list/" 
+    login_url = "login.html"
     fields = "__all__"
 
 
@@ -158,8 +162,16 @@ class BorrarArticulo(LoginRequiredMixin, DeleteView):
 
     model= Articulo
     success_url = "/AppMascota/articulo/list"
+    login_url = "login.html"
     template_name = "articulo_confirm_delete.html"
 
 
 
+def about(request):
 
+    return render(request, "about.html")
+
+
+def sitioConst(request):
+
+    return render(request, "enConstruccion.html")
